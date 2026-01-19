@@ -3,727 +3,1971 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Weather API - Step by Step</title>
+    <title>Weather API - 7 Day Roadmap</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%); color: white; padding: 30px; text-align: center; }
-        .header h1 { font-size: 2em; margin-bottom: 10px; }
-        .header p { opacity: 0.9; }
-        .steps { padding: 30px; }
-        .step { margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
-        .step-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fafafa; transition: background 0.2s; }
-        .step-header:hover { background: #f0f0f0; }
-        .step.completed .step-header { background: #e8f5e9; border-color: #4caf50; }
-        .step.active .step-header { background: #e3f2fd; border-color: #2196f3; }
-        .step-num { width: 40px; height: 40px; background: #2196f3; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; }
-        .step.completed .step-num { background: #4caf50; }
-        .step-title { display: flex; align-items: center; flex: 1; }
-        .step-title h3 { font-size: 1.2em; }
-        .step-title p { color: #666; font-size: 0.9em; margin-top: 3px; }
-        .step-content { padding: 20px; display: none; background: #fff; }
-        .step.active .step-content { display: block; }
-        .checklist { margin-top: 15px; }
-        .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .check-item:last-child { border-bottom: none; }
-        .check-item input { width: 20px; height: 20px; cursor: pointer; accent-color: #2196f3; flex-shrink: 0; margin-top: 2px; }
-        .check-item label { cursor: pointer; flex: 1; line-height: 1.5; }
-        .code-block { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 0.9em; line-height: 1.5; margin: 10px 0; white-space: pre; }
-        .code-block .keyword { color: #569cd6; }
-        .code-block .string { color: #ce9178; }
-        .code-block .comment { color: #6a9955; font-style: italic; }
-        .code-block .func { color: #dcdcaa; }
-        .code-block .type { color: #4ec9b0; }
-        .tip { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 12px 15px; margin: 15px 0; border-radius: 0 8px 8px 0; font-size: 0.95em; }
-        .tip strong { color: #2e7d32; }
-        .tip a { color: #1b5e20; }
-        .info-box { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .info-box strong { color: #856404; }
-        .progress-bar { background: #e0e0e0; height: 8px; border-radius: 4px; margin: 20px 30px 5px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, #00b4db, #0083b0); width: 0%; transition: width 0.3s; }
-        .progress-text { text-align: center; padding: 5px 30px 20px; color: #666; font-size: 0.9em; }
-        .nav { display: flex; justify-content: center; gap: 10px; padding: 20px; background: #fafafa; }
-        .nav button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: transform 0.2s; }
-        .nav button:hover { transform: translateY(-2px); }
-        .nav .reset { background: #f44336; color: white; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .progress-overview {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .sprints {
+            padding: 40px;
+        }
+
+        .sprint {
+            margin-bottom: 40px;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .sprint-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .sprint-header:hover {
+            background: #f8f9fa;
+        }
+
+        .sprint.sprint-1 .sprint-header {
+            background: #e3f2fd;
+        }
+
+        .sprint.sprint-2 .sprint-header {
+            background: #fff3e0;
+        }
+
+        .sprint.sprint-3 .sprint-header {
+            background: #f3e5f5;
+        }
+
+        .sprint-title {
+            flex: 1;
+        }
+
+        .sprint-title h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .sprint-title p {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .sprint-progress {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .stories {
+            padding: 20px;
+            display: none;
+        }
+
+        .sprint.active .stories {
+            display: block;
+        }
+
+        .story {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .story-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-wrapper {
+            position: relative;
+        }
+
+        .story-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .story-info {
+            flex: 1;
+        }
+
+        .story-info h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .badge.critical {
+            background: #fee;
+            color: #c33;
+        }
+
+        .badge.high {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .badge.medium {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge.time {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .story-description {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .tasks {
+            margin-top: 10px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .task-text {
+            color: #495057;
+            font-size: 0.95em;
+        }
+
+        .task.completed .task-text {
+            text-decoration: line-through;
+            color: #adb5bd;
+        }
+
+        .toggle-tasks {
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .toggle-tasks:hover {
+            text-decoration: underline;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-reset {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-export {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-resources {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px 15px 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 20px 0 10px 0;
+            font-size: 1.3em;
+        }
+
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .resource-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .resource-item a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .resource-item a:hover {
+            text-decoration: underline;
+        }
+
+        .resource-item p {
+            margin: 5px 0 0 0;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .topic-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .topic-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .topic-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .topic-card ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .topic-card ul li {
+            margin-bottom: 5px;
+        }
+
+        .prerequisite-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .prerequisite-box h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .learning-path {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .learning-path ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .learning-path li {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                bottom: 10px;
+                right: 10px;
+                flex-direction: column;
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Go Weather API - 6 Steps</h1>
-            <p>Build a production-ready API from scratch</p>
+            <h1>🚀 Go Weather API Project</h1>
+            <p>Complete Learning Roadmap with Resources & Project Analysis</p>
         </div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
+
+        <div class="progress-overview">
+            <h2>Your Learning Progress</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="total-stories">0</h3>
+                    <p>Stories/Topics</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="completed-stories">0</h3>
+                    <p>Completed</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="completion-percentage">0%</h3>
+                    <p>Progress</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="estimated-hours">0h</h3>
+                    <p>Est. Learning Time</p>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill">0%</div>
+            </div>
         </div>
-        <div class="progress-text" id="progressText">0% Complete</div>
-        
-        <div class="steps">
-            <!-- Step 1: Setup -->
-            <div class="step active" data-step="1">
-                <div class="step-header" onclick="toggleStep(1)">
-                    <div class="step-title">
-                        <div class="step-num">1</div>
-                        <div>
-                            <h3>Project Setup</h3>
-                            <p>Initialize Go project and install dependencies</p>
-                        </div>
+
+        <div class="sprints">
+            <!-- Sprint 1 -->
+            <div class="sprint sprint-1 active" data-sprint="1">
+                <div class="sprint-header" onclick="toggleSprint(1)">
+                    <div class="sprint-title">
+                        <h2>🔵 Sprint 1: Core Functionality</h2>
+                        <p>Days 1-2 • Make it Work</p>
                     </div>
+                    <div class="sprint-progress" id="sprint-1-progress">0/5</div>
                 </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Get your project ready with all needed tools
-                    </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step1-1" onchange="updateProgress()">
-                            <label for="step1-1">Create project folder and initialize Go module</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step1-2" onchange="updateProgress()">
-                            <label for="step1-2">Install packages: Gin, Redis, Viper, Tollbooth, Swag</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step1-3" onchange="updateProgress()">
-                            <label for="step1-3">Create folder structure (cmd, internal/*)</label>
-                        </div>
-                    </div>
-                    
-                    <h4 style="margin-top: 20px;">Commands to run:</h4>
-                    <div class="code-block">mkdir weather-api
-cd weather-api
-go mod init weather-api</div>
-                    
-                    <div class="code-block">go get github.com/gin-gonic/gin
-go get github.com/go-redis/redis/v8
-go get github.com/spf13/viper
-go get github.com/didip/tollbooth
-go get github.com/swaggo/gin-swagger@latest
-go get github.com/swaggo/swag@latest</div>
-                    
-                    <div class="code-block">mkdir -p cmd internal/{config,handlers,services,cache,middleware} docs</div>
-                    
-                    <div class="tip">
-                        <strong>Tip:</strong> Keep your terminal open! You'll run commands here throughout the tutorial.
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Step 2: Configuration -->
-            <div class="step" data-step="2">
-                <div class="step-header" onclick="toggleStep(2)">
-                    <div class="step-title">
-                        <div class="step-num">2</div>
-                        <div>
-                            <h3>Configuration</h3>
-                            <p>Set up environment variables and config file</p>
+                <div class="stories" id="sprint-1-stories">
+                    <!-- Story 1.1 -->
+                    <div class="story" data-story="1.1">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 1.1: Project Setup</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Set up proper Go project structure with all necessary folders and configuration files.</p>
+                                <a class="toggle-tasks" onclick="toggleTasks(this)">Show Tasks ▼</a>
+                                <div class="tasks" style="display:none;">
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create folder structure</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Initialize go.mod</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create main.go skeleton</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create .gitignore</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create README.md with title</span></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Store API keys and settings safely outside your code
-                    </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step2-1" onchange="updateProgress()">
-                            <label for="step2-1">Create .env file with API key and settings</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step2-2" onchange="updateProgress()">
-                            <label for="step2-2">Create cmd/config.json</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step2-3" onchange="updateProgress()">
-                            <label for="step2-3">Write internal/config/config.go</label>
-                        </div>
-                    </div>
-                    
-                    <h4 style="margin-top: 20px;">1. Create <span class="code-block" style="display:inline;padding:2px 6px;">.env</span> file:</h4>
-                    <div class="code-block">WEATHER_API_KEY=your_api_key_here
-REDIS_ADDR=localhost:6379
-SERVER_PORT=:8080</div>
-                    
-                    <h4 style="margin-top: 20px;">2. Create <span class="code-block" style="display:inline;padding:2px 6px;">cmd/config.json</span>:</h4>
-                    <div class="code-block">{
-    "serverPort": ":8080",
-    "weatherApiKey": "",
-    "redisAddress": "localhost:6379"
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">3. Create <span class="code-block" style="display:inline;padding:2px 6px;">internal/config/config.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> config
 
-<span class="keyword">import</span> <span class="string">"github.com/spf13/viper"</span>
-
-<span class="keyword">type</span> Config <span class="keyword">struct</span> {
-    ServerPort    <span class="string">string</span>
-    WeatherApiKey <span class="string">string</span>
-    RedisAddress  <span class="string">string</span>
-}
-
-<span class="keyword">func</span> <span class="func">LoadConfig</span>() (*Config, <span class="keyword">error</span>) {
-    viper.SetConfigFile(<span class="string">"cmd/config.json"</span>)
-    viper.AutomaticEnv()
-    
-    <span class="keyword">if</span> err := viper.ReadInConfig(); err != <span class="keyword">nil</span> {
-        <span class="keyword">return</span> <span class="keyword">nil</span>, err
-    }
-    
-    <span class="keyword">var</span> cfg Config
-    <span class="keyword">if</span> err := viper.Unmarshal(&cfg); err != <span class="keyword">nil</span> {
-        <span class="keyword">return</span> <span class="keyword">nil</span>, err
-    }
-    
-    <span class="keyword">return</span> &cfg, <span class="keyword">nil</span>
-}</div>
-                    
-                    <div class="tip">
-                        <strong>Tip:</strong> Get your free API key from <a href="https://www.visualcrossing.com/weather-api" target="_blank">visualcrossing.com</a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Step 3: Basic Server -->
-            <div class="step" data-step="3">
-                <div class="step-header" onclick="toggleStep(3)">
-                    <div class="step-title">
-                        <div class="step-num">3</div>
-                        <div>
-                            <h3>Basic Server</h3>
-                            <p>Create HTTP server with one endpoint</p>
+                    <!-- Story 1.2 -->
+                    <div class="story" data-story="1.2">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 1.2: Basic HTTP Server</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Create a working HTTP server with health check and weather endpoints.</p>
+                                <a class="toggle-tasks" onclick="toggleTasks(this)">Show Tasks ▼</a>
+                                <div class="tasks" style="display:none;">
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Install HTTP router (gorilla/mux or chi)</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create server in main.go</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Add /health endpoint</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Add /api/v1/weather endpoint</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Test with browser/curl</span></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Get a running server that responds to requests
+
+                    <!-- Story 1.3 -->
+                    <div class="story" data-story="1.3">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 1.3: Configuration Management</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Implement secure configuration loading from environment variables.</p>
+                                <a class="toggle-tasks" onclick="toggleTasks(this)">Show Tasks ▼</a>
+                                <div class="tasks" style="display:none;">
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create .env file (don't commit!)</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create .env.example</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Install godotenv package</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create internal/config/config.go</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Load: API key, port, base URL</span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step3-1" onchange="updateProgress()">
-                            <label for="step3-1">Create main.go entry point</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step3-2" onchange="updateProgress()">
-                            <label for="step3-2">Create weather handler with hardcoded response</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step3-3" onchange="updateProgress()">
-                            <label for="step3-3">Test the server works</label>
+
+                    <!-- Story 1.4 -->
+                    <div class="story" data-story="1.4">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 1.4: Weather API Client</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">3 hours</span>
+                                </div>
+                                <p class="story-description">Build client to fetch real weather data from Visual Crossing API.</p>
+                                <a class="toggle-tasks" onclick="toggleTasks(this)">Show Tasks ▼</a>
+                                <div class="tasks" style="display:none;">
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Sign up for Visual Crossing API</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create internal/client/weatherapi.go</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create struct for API response</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create FetchWeather function</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Add HTTP client with timeout</span></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <h4 style="margin-top: 20px;">1. Create <span class="code-block" style="display:inline;padding:2px 6px;">internal/handlers/weather_handler.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> handlers
 
-<span class="keyword">import</span> (
-    <span class="string">"net/http"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
-
-<span class="keyword">func</span> <span class="func">GetWeather</span>(c *gin.Context) {
-    city := c.Param(<span class="string">"city"</span>)
-    
-    <span class="comment">// For now, return hardcoded response</span>
-    c.JSON(http.StatusOK, gin.H{
-        <span class="string">"city"</span>:        city,
-        <span class="string">"temperature"</span>: 25.5,
-        <span class="string">"condition"</span>:   <span class="string">"Sunny"</span>,
-    })
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">2. Create <span class="code-block" style="display:inline;padding:2px 6px;">cmd/main.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> main
-
-<span class="keyword">import</span> (
-    <span class="string">"log"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/config"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/handlers"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
-
-<span class="keyword">func</span> <span class="func">main</span>() {
-    cfg, err := config.LoadConfig()
-    <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-        log.Fatal(<span class="string">"Failed to load config:"</span>, err)
-    }
-    
-    r := gin.Default()
-    r.GET(<span class="string">"/weather/:city"</span>, handlers.GetWeather)
-    
-    log.Println(<span class="string">"Server starting on"</span>, cfg.ServerPort)
-    r.Run(cfg.ServerPort)
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">3. Test it:</h4>
-                    <div class="code-block">go run cmd/main.go</div>
-                    <p>Then open browser to: <strong>http://localhost:8080/weather/london</strong></p>
-                    
-                    <div class="tip">
-                        <strong>Expected result:</strong> <code>{"city":"london","temperature":25.5,"condition":"Sunny"}</code>
+                    <!-- Story 1.5 -->
+                    <div class="story" data-story="1.5">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 1.5: Connect Handler to Weather Client</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Wire up HTTP handler to weather client for end-to-end functionality.</p>
+                                <a class="toggle-tasks" onclick="toggleTasks(this)">Show Tasks ▼</a>
+                                <div class="tasks" style="display:none;">
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Create internal/handler/weather.go</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Read city query parameter</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Call weather client</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Return JSON response</span></div>
+                                    <div class="task"><input type="checkbox" class="task-checkbox" onchange="updateTaskProgress(this)"><span class="task-text">Add error handling</span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Step 4: Redis Cache -->
-            <div class="step" data-step="4">
-                <div class="step-header" onclick="toggleStep(4)">
-                    <div class="step-title">
-                        <div class="step-num">4</div>
-                        <div>
-                            <h3>Redis Cache</h3>
-                            <p>Add caching to reduce API calls</p>
-                        </div>
+
+            <!-- Sprint 2 -->
+            <div class="sprint sprint-2" data-sprint="2">
+                <div class="sprint-header" onclick="toggleSprint(2)">
+                    <div class="sprint-title">
+                        <h2>🟡 Sprint 2: Production Features</h2>
+                        <p>Days 3-5 • Make it Right</p>
                     </div>
+                    <div class="sprint-progress" id="sprint-2-progress">0/8</div>
                 </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Cache weather data for 12 hours to save API calls
-                    </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step4-1" onchange="updateProgress()">
-                            <label for="step4-1">Install Redis on your machine</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step4-2" onchange="updateProgress()">
-                            <label for="step4-2">Write internal/cache/cache.go</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step4-3" onchange="updateProgress()">
-                            <label for="step4-3">Update main.go to use cache</label>
+                <div class="stories" id="sprint-2-stories">
+                    <!-- Story 2.1 -->
+                    <div class="story" data-story="2.1">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.1: Redis Setup</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">1 hour</span>
+                                </div>
+                                <p class="story-description">Install and configure Redis for caching.</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <h4 style="margin-top: 20px;">1. Install Redis:</h4>
-                    <div class="code-block"><span class="comment"># Ubuntu/Debian</span>
-sudo apt update
-sudo apt install redis-server
-sudo systemctl start redis
 
-<span class="comment"># macOS</span>
-brew install redis
-brew services start redis</div>
-                    
-                    <h4 style="margin-top: 20px;">2. Create <span class="code-block" style="display:inline;padding:2px 6px;">internal/cache/cache.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> cache
-
-<span class="keyword">import</span> (
-    <span class="string">"context"</span>
-    <span class="string">"time"</span>
-    <span class="string">"github.com/go-redis/redis/v8"</span>
-)
-
-<span class="keyword">type</span> Cache <span class="keyword">struct</span> {
-    client *redis.Client
-}
-
-<span class="keyword">func</span> <span class="func">NewCache</span>(addr <span class="string">string</span>) *Cache {
-    client := redis.NewClient(&redis.Options{
-        Addr: addr,
-    })
-    <span class="keyword">return</span> &Cache{client: client}
-}
-
-<span class="keyword">func</span> (c *Cache) <span class="func">Get</span>(ctx context.Context, key <span class="string">string</span>) (<span class="string">string</span>, <span class="keyword">error</span>) {
-    <span class="keyword">return</span> c.client.Get(ctx, key).Result()
-}
-
-<span class="keyword">func</span> (c *Cache) <span class="func">Set</span>(ctx context.Context, key, value <span class="string">string</span>, expiration time.Duration) <span class="keyword">error</span> {
-    <span class="keyword">return</span> c.client.Set(ctx, key, value, expiration).Err()
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">3. Update <span class="code-block" style="display:inline;padding:2px 6px;">cmd/main.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> main
-
-<span class="keyword">import</span> (
-    <span class="string">"log"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/cache"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/config"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/handlers"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
-
-<span class="keyword">func</span> <span class="func">main</span>() {
-    cfg, err := config.LoadConfig()
-    <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-        log.Fatal(<span class="string">"Failed to load config:"</span>, err)
-    }
-    
-    redisCache := cache.NewCache(cfg.RedisAddress)
-    
-    r := gin.Default()
-    r.GET(<span class="string">"/weather/:city"</span>, <span class="keyword">func</span>(c *gin.Context) {
-        handlers.GetWeather(c, redisCache)
-    })
-    
-    r.Run(cfg.ServerPort)
-}</div>
-                    
-                    <div class="tip">
-                        <strong>Test:</strong> First call shows hardcoded data. Refresh and it still shows same data (now cached in Redis!)
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Step 5: External API -->
-            <div class="step" data-step="5">
-                <div class="step-header" onclick="toggleStep(5)">
-                    <div class="step-title">
-                        <div class="step-num">5</div>
-                        <div>
-                            <h3>External API</h3>
-                            <p>Connect to Visual Crossing weather API</p>
+                    <!-- Story 2.2 -->
+                    <div class="story" data-story="2.2">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.2: Redis Cache Client</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">3 hours</span>
+                                </div>
+                                <p class="story-description">Build Redis client with Get/Set operations and TTL support.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Fetch real weather data from Visual Crossing
-                    </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step5-1" onchange="updateProgress()">
-                            <label for="step5-1">Create internal/services/weather_service.go</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step5-2" onchange="updateProgress()">
-                            <label for="step5-2">Update handlers to use service</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step5-3" onchange="updateProgress()">
-                            <label for="step5-3">Test with real API</label>
+
+                    <!-- Story 2.3 -->
+                    <div class="story" data-story="2.3">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.3: Cache-Aside Pattern</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Implement cache-first logic in service layer.</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <h4 style="margin-top: 20px;">1. Create <span class="code-block" style="display:inline;padding:2px 6px;">internal/services/weather_service.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> services
 
-<span class="keyword">import</span> (
-    <span class="string">"context"</span>
-    <span class="string">"encoding/json"</span>
-    <span class="string">"fmt"</span>
-    <span class="string">"io"</span>
-    <span class="string">"net/http"</span>
-    <span class="string">"time"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/cache"</span>
-)
+                    <!-- Story 2.4 -->
+                    <div class="story" data-story="2.4">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.4: Input Validation</h3>
+                                <div class="story-meta">
+                                    <span class="badge high">HIGH</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Validate and sanitize user input to prevent attacks.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="keyword">type</span> WeatherService <span class="keyword">struct</span> {
-    apiKey <span class="string">string</span>
-    cache  *cache.Cache
-}
+                    <!-- Story 2.5 -->
+                    <div class="story" data-story="2.5">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.5: Structured Logging</h3>
+                                <div class="story-meta">
+                                    <span class="badge high">HIGH</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Add JSON-based structured logging for all requests.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="keyword">func</span> <span class="func">NewWeatherService</span>(apiKey <span class="string">string</span>, c *cache.Cache) *WeatherService {
-    <span class="keyword">return</span> &WeatherService{apiKey: apiKey, cache: c}
-}
+                    <!-- Story 2.6 -->
+                    <div class="story" data-story="2.6">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.6: Rate Limiting</h3>
+                                <div class="story-meta">
+                                    <span class="badge high">HIGH</span>
+                                    <span class="badge time">3 hours</span>
+                                </div>
+                                <p class="story-description">Prevent API abuse with per-IP rate limiting.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="keyword">type</span> WeatherResponse <span class="keyword">struct</span> {
-    Location    <span class="string">string</span>    <span class="string">`json:"location"`</span>
-    Temperature <span class="type">float64</span>   <span class="string">`json:"temperature"`</span>
-    Conditions  <span class="string">string</span>    <span class="string">`json:"conditions"`</span>
-    Time        <span class="type">time.Time</span> <span class="string">`json:"time"`</span>
-}
+                    <!-- Story 2.7 -->
+                    <div class="story" data-story="2.7">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.7: Error Handling & Recovery</h3>
+                                <div class="story-meta">
+                                    <span class="badge high">HIGH</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Add panic recovery and graceful error handling.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="keyword">func</span> (s *WeatherService) <span class="func">GetWeather</span>(ctx context.Context, city <span class="string">string</span>) (WeatherResponse, <span class="keyword">error</span>) {
-    <span class="comment">// Check cache first</span>
-    cacheKey := <span class="string">"weather:"</span> + city
-    cached, _ := s.cache.Get(ctx, cacheKey)
-    <span class="keyword">if</span> cached != <span class="string">""</span> {
-        <span class="keyword">var</span> resp WeatherResponse
-        json.Unmarshal([]byte(cached), &resp)
-        resp.Time = time.Now()
-        <span class="keyword">return</span> resp, <span class="keyword">nil</span>
-    }
-    
-    <span class="comment">// Call Visual Crossing API</span>
-    url := fmt.Sprintf(
-        <span class="string">"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s?unitGroup=metric&key=%s&contentType=json"</span>,
-        city, s.apiKey,
-    )
-    
-    resp, err := http.Get(url)
-    <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-        <span class="keyword">return</span> WeatherResponse{}, fmt.Errorf(<span class="string">"API request failed: %v"</span>, err)
-    }
-    <span class="keyword">defer</span> resp.Body.Close()
-    
-    <span class="keyword">if</span> resp.StatusCode != http.StatusOK {
-        <span class="keyword">return</span> WeatherResponse{}, fmt.Errorf(<span class="string">"API returned status %d"</span>, resp.StatusCode)
-    }
-    
-    body, _ := io.ReadAll(resp.Body)
-    
-    <span class="keyword">var</span> apiResp map[string]interface{}
-    json.Unmarshal(body, &apiResp)
-    
-    <span class="keyword">if</span> days, ok := apiResp[<span class="string">"days"</span>].([]interface{}); ok && <span class="keyword">len</span>(days) > 0 {
-        day := days[0].(map[string]interface{})
-        
-        result := WeatherResponse{
-            Location:    apiResp[<span class="string">"resolvedAddress"</span>].(string),
-            Temperature: day[<span class="string">"temp"</span>].(float64),
-            Conditions:  day[<span class="string">"conditions"</span>].(string),
-            Time:        time.Now(),
-        }
-        
-        <span class="comment">// Cache for 12 hours</span>
-        jsonData, _ := json.Marshal(result)
-        s.cache.Set(ctx, cacheKey, string(jsonData), 12*time.Hour)
-        
-        <span class="keyword">return</span> result, <span class="keyword">nil</span>
-    }
-    
-    <span class="keyword">return</span> WeatherResponse{}, fmt.Errorf(<span class="string">"no weather data found"</span>)
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">2. Update <span class="code-block" style="display:inline;padding:2px 6px;">internal/handlers/weather_handler.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> handlers
-
-<span class="keyword">import</span> (
-    <span class="string">"net/http"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/services"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
-
-<span class="keyword">type</span> WeatherHandler <span class="keyword">struct</span> {
-    service *services.WeatherService
-}
-
-<span class="keyword">func</span> <span class="func">NewWeatherHandler</span>(s *services.WeatherService) *WeatherHandler {
-    <span class="keyword">return</span> &WeatherHandler{service: s}
-}
-
-<span class="keyword">func</span> (h *WeatherHandler) <span class="func">GetWeather</span>(c *gin.Context) {
-    city := c.Param(<span class="string">"city"</span>)
-    <span class="keyword">if</span> city == <span class="string">""</span> {
-        c.JSON(http.StatusBadRequest, gin.H{<span class="string">"error"</span>: <span class="string">"city is required"</span>})
-        <span class="keyword">return</span>
-    }
-    
-    weather, err := h.service.GetWeather(c.Request.Context(), city)
-    <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-        c.JSON(http.StatusInternalServerError, gin.H{<span class="string">"error"</span>: err.Error()})
-        <span class="keyword">return</span>
-    }
-    
-    c.JSON(http.StatusOK, weather)
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">3. Update <span class="code-block" style="display:inline;padding:2px 6px;">cmd/main.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> main
-
-<span class="keyword">import</span> (
-    <span class="string">"log"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/cache"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/config"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/handlers"</span>
-    <span class="string">"github.com/yourname/weather-api/internal/services"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
-
-<span class="keyword">func</span> <span class="func">main</span>() {
-    cfg, err := config.LoadConfig()
-    <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-        log.Fatal(<span class="string">"Failed to load config:"</span>, err)
-    }
-    
-    redisCache := cache.NewCache(cfg.RedisAddress)
-    weatherService := services.NewWeatherService(cfg.WeatherApiKey, redisCache)
-    weatherHandler := handlers.NewWeatherHandler(weatherService)
-    
-    r := gin.Default()
-    r.GET(<span class="string">"/weather/:city"</span>, weatherHandler.GetWeather)
-    
-    log.Println(<span class="string">"Server starting on"</span>, cfg.ServerPort)
-    r.Run(cfg.ServerPort)
-}</div>
-                    
-                    <div class="tip">
-                        <strong>Test:</strong> Visit http://localhost:8080/weather/newyork - you should see REAL weather data!
+                    <!-- Story 2.8 -->
+                    <div class="story" data-story="2.8">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 2.8: Health Check Endpoints</h3>
+                                <div class="story-meta">
+                                    <span class="badge medium">MEDIUM</span>
+                                    <span class="badge time">1 hour</span>
+                                </div>
+                                <p class="story-description">Add /health and /health/ready endpoints for monitoring.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Step 6: Production -->
-            <div class="step" data-step="6">
-                <div class="step-header" onclick="toggleStep(6)">
-                    <div class="step-title">
-                        <div class="step-num">6</div>
-                        <div>
-                            <h3>Production Polish</h3>
-                            <p>Rate limiting and Docker deployment</p>
-                        </div>
+
+            <!-- Sprint 3 -->
+            <div class="sprint sprint-3" data-sprint="3">
+                <div class="sprint-header" onclick="toggleSprint(3)">
+                    <div class="sprint-title">
+                        <h2>🟣 Sprint 3: Deployment & Polish</h2>
+                        <p>Days 6-7 • Make it Ship</p>
                     </div>
+                    <div class="sprint-progress" id="sprint-3-progress">0/7</div>
                 </div>
-                <div class="step-content">
-                    <div class="info-box">
-                        <strong>Goal:</strong> Add rate limiting and Docker for production deployment
-                    </div>
-                    
-                    <div class="checklist">
-                        <div class="check-item">
-                            <input type="checkbox" id="step6-1" onchange="updateProgress()">
-                            <label for="step6-1">Add rate limiting middleware</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step6-2" onchange="updateProgress()">
-                            <label for="step6-2">Create Dockerfile</label>
-                        </div>
-                        <div class="check-item">
-                            <input type="checkbox" id="step6-3" onchange="updateProgress()">
-                            <label for="step6-3">Create docker-compose.yml</label>
+                <div class="stories" id="sprint-3-stories">
+                    <!-- Story 3.1 -->
+                    <div class="story" data-story="3.1">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.1: Unit Tests</h3>
+                                <div class="story-meta">
+                                    <span class="badge high">HIGH</span>
+                                    <span class="badge time">3 hours</span>
+                                </div>
+                                <p class="story-description">Write automated tests for critical components.</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <h4 style="margin-top: 20px;">1. Create <span class="code-block" style="display:inline;padding:2px 6px;">internal/middleware/rate_limiter.go</span>:</h4>
-                    <div class="code-block"><span class="keyword">package</span> middleware
 
-<span class="keyword">import</span> (
-    <span class="string">"net/http"</span>
-    <span class="string">"github.com/didip/tollbooth"</span>
-    <span class="string">"github.com/gin-gonic/gin"</span>
-)
+                    <!-- Story 3.2 -->
+                    <div class="story" data-story="3.2">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.2: Integration Testing</h3>
+                                <div class="story-meta">
+                                    <span class="badge medium">MEDIUM</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Test end-to-end scenarios and edge cases.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="keyword">func</span> <span class="func">RateLimit</span>() gin.HandlerFunc {
-    limiter := tollbooth.NewLimiter(1, <span class="keyword">nil</span>) <span class="comment">// 1 request per second</span>
-    <span class="keyword">return</span> <span class="keyword">func</span>(c *gin.Context) {
-        err := tollbooth.LimitByRequest(limiter, c.Writer, c.Request)
-        <span class="keyword">if</span> err != <span class="keyword">nil</span> {
-            c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
-                <span class="string">"error"</span>: <span class="string">"Too many requests"</span>,
-            })
-            <span class="keyword">return</span>
-        }
-        c.Next()
-    }
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">2. Update main.go with middleware:</h4>
-                    <div class="code-block">r := gin.Default()
-r.Use(middleware.RateLimit())
-r.GET(<span class="string">"/weather/:city"</span>, weatherHandler.GetWeather)</div>
-                    
-                    <h4 style="margin-top: 20px;">3. Create <span class="code-block" style="display:inline;padding:2px 6px;">Dockerfile</span>:</h4>
-                    <div class="code-block"><span class="comment"># Build stage</span>
-FROM golang:1.22-alpine AS builder
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN go build -o weather-api ./cmd/main.go
+                    <!-- Story 3.3 -->
+                    <div class="story" data-story="3.3">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.3: Dockerfile</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Create multi-stage Docker build for deployment.</p>
+                            </div>
+                        </div>
+                    </div>
 
-<span class="comment"># Run stage</span>
-FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/weather-api .
-COPY --from=builder /app/cmd/config.json .
-EXPOSE 8080
-CMD [<span class="string">"./weather-api"</span>]</div>
-                    
-                    <h4 style="margin-top: 20px;">4. Create <span class="code-block" style="display:inline;padding:2px 6px;">docker-compose.yml</span>:</h4>
-                    <div class="code-block">version: <span class="string">'3'</span>
-services:
-  weather-api:
-    build: .
-    ports:
-      - <span class="string">"8080:8080"</span>
-    environment:
-      - WEATHER_API_KEY=${WEATHER_API_KEY}
-      - REDIS_ADDRESS=redis:6379
-    depends_on:
-      - redis
+                    <!-- Story 3.4 -->
+                    <div class="story" data-story="3.4">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.4: Docker Compose</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">1 hour</span>
+                                </div>
+                                <p class="story-description">Set up one-command deployment with docker-compose.</p>
+                            </div>
+                        </div>
+                    </div>
 
-  redis:
-    image: redis:alpine
-    ports:
-      - <span class="string">"6379:6379"</span>
+                    <!-- Story 3.5 -->
+                    <div class="story" data-story="3.5">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.5: Documentation</h3>
+                                <div class="story-meta">
+                                    <span class="badge critical">CRITICAL</span>
+                                    <span class="badge time">2 hours</span>
+                                </div>
+                                <p class="story-description">Write comprehensive README with setup instructions.</p>
+                            </div>
+                        </div>
+                    </div>
 
-volumes:
-  redis-data:</div>
-                    
-                    <h4 style="margin-top: 20px;">5. Update cmd/config.json for Docker:</h4>
-                    <div class="code-block">{
-    <span class="string">"serverPort"</span>: <span class="string">":8080"</span>,
-    <span class="string">"weatherApiKey"</span>: <span class="string">""</span>,
-    <span class="string">"redisAddress"</span>: <span class="string">"redis:6379"</span>
-}</div>
-                    
-                    <h4 style="margin-top: 20px;">6. Run with Docker:</h4>
-                    <div class="code-block">docker-compose build
-docker-compose up</div>
-                    
-                    <div class="tip">
-                        <strong>You're done!</strong> Your production-ready Weather API is now running with:<br>
-                        ✓ Real weather data from Visual Crossing<br>
-                        ✓ 12-hour caching with Redis<br>
-                        ✓ Rate limiting (1 req/sec)<br>
-                        ✓ Docker deployment<br>
-                        ✓ Environment variable configuration
+                    <!-- Story 3.6 -->
+                    <div class="story" data-story="3.6">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.6: Performance Testing</h3>
+                                <div class="story-meta">
+                                    <span class="badge medium">MEDIUM</span>
+                                    <span class="badge time">1 hour</span>
+                                </div>
+                                <p class="story-description">Benchmark API performance and document results.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Story 3.7 -->
+                    <div class="story" data-story="3.7">
+                        <div class="story-header">
+                            <input type="checkbox" class="story-checkbox" onchange="updateProgress()">
+                            <div class="story-info">
+                                <h3>Story 3.7: Code Cleanup</h3>
+                                <div class="story-meta">
+                                    <span class="badge medium">LOW</span>
+                                    <span class="badge time">1 hour</span>
+                                </div>
+                                <p class="story-description">Final code cleanup and formatting for production quality.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="nav">
-            <button class="reset" onclick="resetProgress()">Reset Progress</button>
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-resources" onclick="showResources()">📚 Learning Resources</button>
+        <button class="btn btn-reset" onclick="resetProgress()">🔄 Reset Progress</button>
+        <button class="btn btn-export" onclick="exportProgress()">📊 Export Report</button>
+    </div>
+
+    <!-- Resources Modal -->
+    <div class="modal" id="resourcesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>📚 Complete Learning Resources</h1>
+                <p>Everything you need to build this project</p>
+                <button class="modal-close" onclick="closeResources()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Prerequisites -->
+                <div class="section">
+                    <div class="prerequisite-box">
+                        <h3>⚡ Before You Start - Prerequisites</h3>
+                        <p><strong>Time needed:</strong> 1-2 days if completely new to Go</p>
+                        <ul>
+                            <li>✅ Basic programming knowledge (variables, functions, loops)</li>
+                            <li>✅ Familiarity with command line/terminal</li>
+                            <li>✅ Understanding of what an API is</li>
+                            <li>✅ Basic HTTP concepts (GET requests, status codes)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Go Basics Section -->
+                <div class="section">
+                    <h2>🎯 Go Language Fundamentals (Days 0-1)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>1. Variables & Types</h4>
+                            <ul>
+                                <li>var vs :=</li>
+                                <li>string, int, bool, float64</li>
+                                <li>Constants</li>
+                                <li>Type conversion</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>2. Functions</h4>
+                            <ul>
+                                <li>Function declaration</li>
+                                <li>Parameters & return values</li>
+                                <li>Multiple return values</li>
+                                <li>Named returns</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>3. Structs</h4>
+                            <ul>
+                                <li>Defining structs</li>
+                                <li>Creating instances</li>
+                                <li>Methods on structs</li>
+                                <li>Pointers to structs</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>4. Error Handling</h4>
+                            <ul>
+                                <li>The error type</li>
+                                <li>if err != nil pattern</li>
+                                <li>Creating errors</li>
+                                <li>Error wrapping</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>5. Packages & Imports</h4>
+                            <ul>
+                                <li>Package declaration</li>
+                                <li>Importing packages</li>
+                                <li>Go modules (go.mod)</li>
+                                <li>Internal packages</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>6. Interfaces</h4>
+                            <ul>
+                                <li>Defining interfaces</li>
+                                <li>Implementing interfaces</li>
+                                <li>Empty interface</li>
+                                <li>Type assertions</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>🌟 Go by Example</strong>
+                            <a href="https://gobyexample.com" target="_blank">https://gobyexample.com</a>
+                            <p>Quick, practical examples of every Go concept. Start here!</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 A Tour of Go (Official)</strong>
+                            <a href="https://go.dev/tour/" target="_blank">https://go.dev/tour/</a>
+                            <p>Interactive tutorial from the Go team. Takes 1-2 hours.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>🎥 Freecodecamp - Go Programming</strong>
+                            <a href="https://www.youtube.com/watch?v=YS4e4q9oBaU" target="_blank">YouTube (7 hours)</a>
+                            <p>Comprehensive video course. Watch sections 1-4 for basics.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📚 Effective Go (Official Docs)</strong>
+                            <a href="https://go.dev/doc/effective_go" target="_blank">https://go.dev/doc/effective_go</a>
+                            <p>Best practices and idioms. Reference as you code.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- HTTP & Web Development -->
+                <div class="section">
+                    <h2>🌐 HTTP & Web APIs in Go (Sprint 1)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>HTTP Server Basics</h4>
+                            <ul>
+                                <li>net/http package</li>
+                                <li>http.HandlerFunc</li>
+                                <li>Listening on ports</li>
+                                <li>Request & Response</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Routing</h4>
+                            <ul>
+                                <li>gorilla/mux router</li>
+                                <li>URL parameters</li>
+                                <li>Query strings</li>
+                                <li>Method routing</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>JSON Handling</h4>
+                            <ul>
+                                <li>encoding/json package</li>
+                                <li>json.Marshal()</li>
+                                <li>json.Unmarshal()</li>
+                                <li>Struct tags</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>HTTP Client</h4>
+                            <ul>
+                                <li>http.Client</li>
+                                <li>Making GET requests</li>
+                                <li>Reading responses</li>
+                                <li>Timeouts</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>📘 Writing Web Applications (Official)</strong>
+                            <a href="https://go.dev/doc/articles/wiki/" target="_blank">https://go.dev/doc/articles/wiki/</a>
+                            <p>Official tutorial for building web apps in Go.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>🎥 Building REST APIs in Go</strong>
+                            <a href="https://www.youtube.com/watch?v=d_L64KT3SFM" target="_blank">YouTube Tutorial</a>
+                            <p>Practical guide to building APIs. Very similar to this project.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 Gorilla Mux Documentation</strong>
+                            <a href="https://github.com/gorilla/mux" target="_blank">GitHub - gorilla/mux</a>
+                            <p>Router library documentation with examples.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Redis & Caching -->
+                <div class="section">
+                    <h2>💾 Redis & Caching (Sprint 2)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Redis Basics</h4>
+                            <ul>
+                                <li>What is Redis?</li>
+                                <li>Key-value storage</li>
+                                <li>SET & GET commands</li>
+                                <li>TTL (expiration)</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>go-redis Client</h4>
+                            <ul>
+                                <li>Connection setup</li>
+                                <li>Connection pooling</li>
+                                <li>Basic operations</li>
+                                <li>Error handling</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Cache Patterns</h4>
+                            <ul>
+                                <li>Cache-aside pattern</li>
+                                <li>Cache invalidation</li>
+                                <li>Cache keys design</li>
+                                <li>TTL strategies</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>🎓 Redis University (Free Course)</strong>
+                            <a href="https://university.redis.com/courses/ru101/" target="_blank">RU101: Introduction to Redis</a>
+                            <p>Free course covering Redis basics. Takes 2-3 hours.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 go-redis Documentation</strong>
+                            <a href="https://redis.uptrace.dev/" target="_blank">https://redis.uptrace.dev/</a>
+                            <p>Official Go client for Redis with examples.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>🎥 Redis Crash Course</strong>
+                            <a href="https://www.youtube.com/watch?v=jgpVdJB2sKQ" target="_blank">YouTube (30 mins)</a>
+                            <p>Quick overview of Redis concepts and commands.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Environment Variables & Configuration -->
+                <div class="section">
+                    <h2>⚙️ Configuration & Environment Variables</h2>
+                    
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>📦 godotenv Package</strong>
+                            <a href="https://github.com/joho/godotenv" target="_blank">GitHub - joho/godotenv</a>
+                            <p>Load environment variables from .env files.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 The 12-Factor App</strong>
+                            <a href="https://12factor.net/config" target="_blank">12factor.net/config</a>
+                            <p>Best practices for configuration management.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Middleware & Advanced Patterns -->
+                <div class="section">
+                    <h2>🔧 Middleware & Production Patterns (Sprint 2-3)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Middleware</h4>
+                            <ul>
+                                <li>What is middleware?</li>
+                                <li>Chaining middleware</li>
+                                <li>Logger middleware</li>
+                                <li>Recovery middleware</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Rate Limiting</h4>
+                            <ul>
+                                <li>Token bucket algorithm</li>
+                                <li>golang.org/x/time/rate</li>
+                                <li>Per-IP limiting</li>
+                                <li>HTTP 429 responses</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Logging</h4>
+                            <ul>
+                                <li>log/slog package (Go 1.21+)</li>
+                                <li>Structured logging</li>
+                                <li>Log levels</li>
+                                <li>JSON format</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>📘 Making and Using Middleware</strong>
+                            <a href="https://www.alexedwards.net/blog/making-and-using-middleware" target="_blank">Alex Edwards Blog</a>
+                            <p>Excellent tutorial on middleware patterns in Go.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 Structured Logging with slog</strong>
+                            <a href="https://go.dev/blog/slog" target="_blank">Official Go Blog</a>
+                            <p>Guide to using Go's new structured logging package.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Testing -->
+                <div class="section">
+                    <h2>🧪 Testing in Go (Sprint 3)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Unit Testing</h4>
+                            <ul>
+                                <li>testing package</li>
+                                <li>Writing test functions</li>
+                                <li>Table-driven tests</li>
+                                <li>Test coverage</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>HTTP Testing</h4>
+                            <ul>
+                                <li>httptest package</li>
+                                <li>Testing handlers</li>
+                                <li>Mock requests</li>
+                                <li>Response recorders</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>📘 Learn Go with Tests</strong>
+                            <a href="https://quii.gitbook.io/learn-go-with-tests/" target="_blank">Free Online Book</a>
+                            <p>Learn Go by writing tests. Excellent TDD approach.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 Testing (Official Docs)</strong>
+                            <a href="https://go.dev/doc/tutorial/add-a-test" target="_blank">go.dev/doc/tutorial</a>
+                            <p>Official tutorial on testing in Go.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Docker -->
+                <div class="section">
+                    <h2>🐳 Docker & Containerization (Sprint 3)</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Docker Basics</h4>
+                            <ul>
+                                <li>What is Docker?</li>
+                                <li>Images vs Containers</li>
+                                <li>Dockerfile syntax</li>
+                                <li>Building images</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Docker Compose</h4>
+                            <ul>
+                                <li>docker-compose.yml</li>
+                                <li>Multi-container apps</li>
+                                <li>Networks</li>
+                                <li>Environment variables</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>🎥 Docker Tutorial for Beginners</strong>
+                            <a href="https://www.youtube.com/watch?v=fqMOX6JJhGo" target="_blank">YouTube (3 hours)</a>
+                            <p>Complete Docker course. Watch sections 1-5 for basics.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📖 Docker for Go Developers</strong>
+                            <a href="https://www.docker.com/blog/containerize-your-go-developer-environment-part-1/" target="_blank">Docker Blog Series</a>
+                            <p>Official guide for containerizing Go applications.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📘 Docker Compose Documentation</strong>
+                            <a href="https://docs.docker.com/compose/" target="_blank">docs.docker.com/compose</a>
+                            <p>Official Docker Compose reference.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- External APIs -->
+                <div class="section">
+                    <h2>🌤️ Weather API Integration</h2>
+                    
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>☀️ Visual Crossing Weather API</strong>
+                            <a href="https://www.visualcrossing.com/weather-api" target="_blank">Visual Crossing</a>
+                            <p>Free tier: 1000 requests/day. Easy to use, good documentation.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>🌦️ OpenWeatherMap API (Alternative)</strong>
+                            <a href="https://openweathermap.org/api" target="_blank">OpenWeatherMap</a>
+                            <p>Popular alternative with 60 calls/min free tier.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Learning Path -->
+                <div class="section">
+                    <h2>🎯 Recommended Learning Path</h2>
+                    
+                    <div class="learning-path">
+                        <h3>If You're New to Go (Add 2 Days Before Sprint 1):</h3>
+                        <ol>
+                            <li><strong>Day -2:</strong> Complete "A Tour of Go" (2 hours) + Go by Example basics (2 hours)</li>
+                            <li><strong>Day -1:</strong> Watch Freecodecamp sections 1-4 (3 hours) + Practice writing simple programs (2 hours)</li>
+                        </ol>
+
+                        <h3>During the Project (7 Days):</h3>
+                        <ol>
+                            <li><strong>Days 1-2 (Sprint 1):</strong> Learn as you build. Reference Go by Example and HTTP tutorials when stuck.</li>
+                            <li><strong>Days 3-5 (Sprint 2):</strong> Watch Redis crash course (30 mins) before Story 2.1. Read middleware tutorial before Story 2.6.</li>
+                            <li><strong>Days 6-7 (Sprint 3):</strong> Watch Docker tutorial sections 1-5 (1 hour) before Story 3.3. Skim testing docs before Story 3.1.</li>
+                        </ol>
+
+                        <h3>Just-In-Time Learning Strategy:</h3>
+                        <ol>
+                            <li>Read the story requirements</li>
+                            <li>Skim the relevant resource (don't try to master it)</li>
+                            <li>Start coding</li>
+                            <li>Reference docs when you get stuck</li>
+                            <li>Learn by doing, not by reading everything first</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Quick Reference -->
+                <div class="section">
+                    <h2>📌 Quick Reference Bookmarks</h2>
+                    
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>🔍 Go Package Documentation</strong>
+                            <a href="https://pkg.go.dev/" target="_blank">pkg.go.dev</a>
+                            <p>Search any Go package documentation.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>💬 Go Forum</strong>
+                            <a href="https://forum.golangbridge.org/" target="_blank">Golang Bridge Forum</a>
+                            <p>Ask questions if you get stuck.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>📚 Awesome Go</strong>
+                            <a href="https://github.com/avelino/awesome-go" target="_blank">GitHub Repository</a>
+                            <p>Curated list of Go libraries and resources.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>🎮 Go Playground</strong>
+                            <a href="https://go.dev/play/" target="_blank">go.dev/play</a>
+                            <p>Test Go code snippets in browser.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Tools & Setup -->
+                <div class="section">
+                    <h2>🛠️ Required Tools & Installation</h2>
+                    
+                    <ul class="resource-list">
+                        <li class="resource-item">
+                            <strong>Go Installation</strong>
+                            <a href="https://go.dev/dl/" target="_blank">Download Go</a>
+                            <p>Install Go 1.21 or later for latest features.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>Docker Desktop</strong>
+                            <a href="https://www.docker.com/products/docker-desktop/" target="_blank">Download Docker</a>
+                            <p>Includes Docker and Docker Compose.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>VS Code (Recommended IDE)</strong>
+                            <a href="https://code.visualstudio.com/" target="_blank">Download VS Code</a>
+                            <p>Install the "Go" extension for best experience.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>Postman (API Testing)</strong>
+                            <a href="https://www.postman.com/downloads/" target="_blank">Download Postman</a>
+                            <p>Test your API endpoints easily.</p>
+                        </li>
+                        <li class="resource-item">
+                            <strong>Git</strong>
+                            <a href="https://git-scm.com/downloads" target="_blank">Download Git</a>
+                            <p>Version control for your code.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Project Deep Dive -->
+                <div class="section">
+                    <h2>📁 Project Structure Deep Dive</h2>
+                    
+                    <h3>Folder Structure Explained</h3>
+                    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.85em;">
+go-weather-api/
+├── cmd/
+│   └── main.go                    # Application entry point - starts everything
+├── internal/                      # Private application code (not importable externally)
+│   ├── api/
+│   │   └── api.go                 # Server initialization & route setup
+│   ├── cache/
+│   │   └── cache.go               # Redis caching layer (interface + implementation)
+│   ├── config/
+│   │   └── config.go              # Configuration loading via Viper
+│   ├── dto/
+│   │   └── data_transfer_objects.go  # Data models (request/response structs)
+│   ├── handlers/
+│   │   └── wheather_handler.go    # HTTP request handlers (controller layer)
+│   ├── middleware/
+│   │   └── limiter.go             # Rate limiting middleware
+│   └── services/
+│       └── wheather_service.go    # Business logic (API calls + caching)
+├── docs/                          # Swagger documentation (auto-generated)
+├── docker-compose.yml             # Multi-container Docker setup
+├── dockerfile                     # Docker image build instructions
+└── go.mod / go.sum                # Go module dependencies
+                    </pre>
+
+                    <h3>Key Design Patterns Used</h3>
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Dependency Injection</h4>
+                            <ul>
+                                <li>Config passed to components</li>
+                                <li>Cache passed to services</li>
+                                <li>Services passed to handlers</li>
+                                <li>Easy testing via mocking</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Interface Segregation</h4>
+                            <ul>
+                                <li>Cache interface abstracts Redis</li>
+                                <li>WeatherService interface defined</li>
+                                <li>Loose coupling between layers</li>
+                                <li>Easy to swap implementations</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Service Layer Pattern</h4>
+                            <ul>
+                                <li>Business logic in services/</li>
+                                <li>HTTP handling in handlers/</li>
+                                <li>Clean separation of concerns</li>
+                                <li>Reusable service logic</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Cache-Aside Pattern</h4>
+                            <ul>
+                                <li>Check cache first</li>
+                                <li>Fetch from API on miss</li>
+                                <li>Store result in cache</li>
+                                <li>Set TTL (12 hours)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Flow -->
+                <div class="section">
+                    <h2>🔄 Request Flow Diagram</h2>
+                    
+                    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.85em;">
+1. USER REQUEST: GET /weather/:city
+   ↓
+2. main.go → Loads config → Creates cache → Starts server
+   ↓
+3. Rate Limiter Middleware (1 request/sec per IP)
+   ├─ If exceeded → Return 429 Too Many Requests
+   └─ Otherwise → Continue
+   ↓
+4. WeatherHandler.GetWeatherByCity() receives request
+   ↓
+5. WeatherService.GetWeatherByCity() executes:
+   a) Check Redis cache for "weather:{city}"
+   b) If cache hit → Return cached data (skip to step 7)
+   c) If cache miss → Call Visual Crossing API
+   d) Parse response → Extract temp, windspeed, conditions
+   e) Cache result for 12 hours
+   f) Return formatted WeatherResponse
+   ↓
+6. JSON response sent back to client
+                    </pre>
+                </div>
+
+                <!-- Build from Scratch -->
+                <div class="section">
+                    <h2>🚀 Build from Scratch - Step by Step</h2>
+                    
+                    <div class="learning-path">
+                        <h3>Command-by-Command Guide:</h3>
+                        <ol>
+                            <li><strong>Initialize Go module:</strong><br><code>go mod init github.com/yourusername/weather-api</code></li>
+                            <li><strong>Install dependencies:</strong><br>
+                                <code>go get github.com/gin-gonic/gin</code><br>
+                                <code>go get github.com/go-redis/redis/v8</code><br>
+                                <code>go get github.com/spf13/viper</code><br>
+                                <code>go get github.com/didip/tollbooth</code><br>
+                                <code>go get github.com/swaggo/gin-swagger</code><br>
+                                <code>go get github.com/swaggo/swag</code>
+                            </li>
+                            <li><strong>Create project structure:</strong><br>
+                                <code>mkdir -p cmd internal/{api,cache,config,dto,handlers,middleware,services} docs</code>
+                            </li>
+                            <li><strong>Implement files in this order:</strong>
+                                <ol>
+                                    <li>config/config.go - Load config</li>
+                                    <li>dto/data_transfer_objects.go - Define structs</li>
+                                    <li>cache/cache.go - Redis interface + implementation</li>
+                                    <li>services/weather_service.go - Business logic</li>
+                                    <li>handlers/weather_handler.go - HTTP handlers</li>
+                                    <li>middleware/limiter.go - Rate limiting</li>
+                                    <li>api/api.go - Router setup</li>
+                                    <li>cmd/main.go - Entry point</li>
+                                </ol>
+                            </li>
+                            <li><strong>Generate Swagger docs:</strong><br><code>swag init</code></li>
+                            <li><strong>Create config.json and docker files</strong></li>
+                            <li><strong>Test locally:</strong><br><code>go run cmd/main.go</code></li>
+                            <li><strong>Build Docker image:</strong><br><code>docker-compose build</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Tiny Resources -->
+                <div class="section">
+                    <h2>⏱️ Tiny Resources - 15 Minute Reads</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 12px; text-align: left;">Topic</th>
+                                <th style="padding: 12px; text-align: left;">Resource</th>
+                                <th style="padding: 12px; text-align: left;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Go Interfaces</td>
+                                <td style="padding: 12px;"><a href="https://gobyexample.com/interfaces" target="_blank">Go by Example - Interfaces</a></td>
+                                <td style="padding: 12px;">10 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Go Concurrency</td>
+                                <td style="padding: 12px;"><a href="https://gobyexample.com/goroutines" target="_blank">Go by Example - Goroutines</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">JSON in Go</td>
+                                <td style="padding: 12px;"><a href="https://pkg.go.dev/encoding/json" target="_blank">encoding/json package</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">HTTP Client</td>
+                                <td style="padding: 12px;"><a href="https://pkg.go.dev/net/http" target="_blank">net/http package</a></td>
+                                <td style="padding: 12px;">20 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Redis Commands</td>
+                                <td style="padding: 12px;"><a href="https://redis.io/commands" target="_blank">Redis Commands</a></td>
+                                <td style="padding: 12px;">30 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Gin Middleware</td>
+                                <td style="padding: 12px;"><a href="https://gin-gonic.com/docs/examples/writing-middleware/" target="_blank">Gin Middleware</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Docker Multi-stage</td>
+                                <td style="padding: 12px;"><a href="https://docs.docker.com/build/building/multi-stage/" target="_blank">Docker Multi-stage Builds</a></td>
+                                <td style="padding: 12px;">20 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Rate Limiting</td>
+                                <td style="padding: 12px;"><a href="https://en.wikipedia.org/wiki/Rate_limiting" target="_blank">Rate Limiting Algorithms</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Learning Checklist -->
+                <div class="section">
+                    <h2>✅ Minimal Viable Learning Checklist</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Phase 1: Go Basics</h4>
+                            <ul>
+                                <li><input type="checkbox"> Write a simple Go HTTP server</li>
+                                <li><input type="checkbox"> Understand interfaces</li>
+                                <li><input type="checkbox"> Make HTTP GET request</li>
+                                <li><input type="checkbox"> Read environment variables</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 2: Data & Caching</h4>
+                            <ul>
+                                <li><input type="checkbox"> Connect to Redis</li>
+                                <li><input type="checkbox"> Implement cache Get/Set</li>
+                                <li><input type="checkbox"> Create JSON structs</li>
+                                <li><input type="checkbox"> Parse API responses</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 3: Production</h4>
+                            <ul>
+                                <li><input type="checkbox"> Create middleware function</li>
+                                <li><input type="checkbox"> Write unit tests</li>
+                                <li><input type="checkbox"> Build Docker image</li>
+                                <li><input type="checkbox"> Use Docker Compose</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 4: Documentation</h4>
+                            <ul>
+                                <li><input type="checkbox"> Generate Swagger docs</li>
+                                <li><input type="checkbox"> Write README</li>
+                                <li><input type="checkbox"> Add error handling</li>
+                                <li><input type="checkbox"> Configure rate limiting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase Breakdown -->
+                <div class="section">
+                    <h2>📅 Learning Phase Breakdown</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Phase 1: Go Fundamentals (1-2 weeks)</h4>
+                            <ul>
+                                <li>Syntax & Basics (2-3 days)</li>
+                                <li>Interfaces (critical!) (1 day)</li>
+                                <li>Goroutines basics (1 day)</li>
+                                <li>HTTP Server basics (1 day)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://tour.golang.org/" target="_blank">A Tour of Go</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 2: Dependencies & Patterns (1 week)</h4>
+                            <ul>
+                                <li>Go modules (2 hours)</li>
+                                <li>Design patterns (2 days)</li>
+                                <li>Viper config (2 hours)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://go.dev/blog/using-go-modules" target="_blank">Go Modules</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 3: Core Concepts (1-2 weeks)</h4>
+                            <ul>
+                                <li>Redis caching (2 days)</li>
+                                <li>Gin framework (2 days)</li>
+                                <li>Middleware (1 day)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://redis.io/docs/" target="_blank">Redis Docs</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 4: Advanced (1 week)</h4>
+                            <ul>
+                                <li>Swagger docs (2 hours)</li>
+                                <li>Docker (2 days)</li>
+                                <li>Testing (2 days)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://docs.docker.com/get-started/" target="_blank">Docker Get Started</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology Stack -->
+                <div class="section">
+                    <h2>🛠️ Technology Stack Reference</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 12px; text-align: left;">Technology</th>
+                                <th style="padding: 12px; text-align: left;">Purpose</th>
+                                <th style="padding: 12px; text-align: left;">Learn More</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Go 1.22</strong></td>
+                                <td style="padding: 12px;">Programming language</td>
+                                <td style="padding: 12px;"><a href="https://go.dev/" target="_blank">go.dev</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Gin</strong></td>
+                                <td style="padding: 12px;">HTTP web framework</td>
+                                <td style="padding: 12px;"><a href="https://gin-gonic.com/" target="_blank">gin-gonic.com</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Redis</strong></td>
+                                <td style="padding: 12px;">In-memory caching</td>
+                                <td style="padding: 12px;"><a href="https://redis.io/" target="_blank">redis.io</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Viper</strong></td>
+                                <td style="padding: 12px;">Configuration management</td>
+                                <td style="padding: 12px;"><a href="https://github.com/spf13/viper" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Tollbooth</strong></td>
+                                <td style="padding: 12px;">Rate limiting</td>
+                                <td style="padding: 12px;"><a href="https://github.com/didip/tollbooth" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Swaggo</strong></td>
+                                <td style="padding: 12px;">Swagger documentation</td>
+                                <td style="padding: 12px;"><a href="https://github.com/swaggo/swag" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Docker</strong></td>
+                                <td style="padding: 12px;">Containerization</td>
+                                <td style="padding: 12px;"><a href="https://docs.docker.com/" target="_blank">Docker Docs</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        const steps = 6;
-        
-        function toggleStep(num) {
-            document.querySelector(`.step[data-step="${num}"]`).classList.toggle('active');
+        // Load progress from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadProgress();
+            updateProgress();
+        });
+
+        function toggleSprint(sprintNum) {
+            const sprint = document.querySelector(`.sprint[data-sprint="${sprintNum}"]`);
+            sprint.classList.toggle('active');
         }
-        
-        function updateProgress() {
-            let total = 0, completed = 0;
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                total++;
-                if (cb.checked) completed++;
-            });
-            
-            const percent = Math.round((completed / total) * 100);
-            document.getElementById('progress').style.width = percent + '%';
-            document.getElementById('progressText').textContent = percent + '% Complete';
-            
-            for (let i = 1; i <= steps; i++) {
-                const stepInputs = document.querySelectorAll(`.step[data-step="${i}"] input[type="checkbox"]`);
-                const allChecked = Array.from(stepInputs).every(cb => cb.checked);
-                document.querySelector(`.step[data-step="${i}"]`).classList.toggle('completed', allChecked);
+
+        function toggleTasks(element) {
+            const tasks = element.nextElementSibling;
+            if (tasks.style.display === 'none') {
+                tasks.style.display = 'block';
+                element.textContent = 'Hide Tasks ▲';
+            } else {
+                tasks.style.display = 'none';
+                element.textContent = 'Show Tasks ▼';
             }
-            
-            localStorage.setItem('weatherApiProgress', JSON.stringify({
-                checkboxes: Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked)
-            }));
         }
-        
+
+        function updateTaskProgress(checkbox) {
+            const task = checkbox.parentElement;
+            if (checkbox.checked) {
+                task.classList.add('completed');
+            } else {
+                task.classList.remove('completed');
+            }
+            saveProgress();
+        }
+
+        function updateProgress() {
+            const allStoryCheckboxes = document.querySelectorAll('.story-checkbox');
+            const completedStories = document.querySelectorAll('.story-checkbox:checked');
+            
+            const total = allStoryCheckboxes.length;
+            const completed = completedStories.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            // Time calculation (rough estimate based on remaining stories)
+            const timeEstimates = {
+                '1.1': 2, '1.2': 2, '1.3': 2, '1.4': 3, '1.5': 2,
+                '2.1': 1, '2.2': 3, '2.3': 2, '2.4': 2, '2.5': 2,
+                '2.6': 3, '2.7': 2, '2.8': 1,
+                '3.1': 3, '3.2': 2, '3.3': 2, '3.4': 1, '3.5': 2,
+                '3.6': 1, '3.7': 1
+            };
+
+            let remainingHours = 0;
+            allStoryCheckboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    const story = checkbox.closest('.story');
+                    const storyId = story.getAttribute('data-story');
+                    remainingHours += timeEstimates[storyId] || 0;
+                }
+            });
+
+            // Update stats
+            document.getElementById('total-stories').textContent = total;
+            document.getElementById('completed-stories').textContent = completed;
+            document.getElementById('completion-percentage').textContent = percentage + '%';
+            document.getElementById('estimated-hours').textContent = remainingHours + 'h';
+
+            // Update progress bar
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '%';
+
+            // Update sprint progress
+            for (let i = 1; i <= 3; i++) {
+                const sprintStories = document.querySelectorAll(`#sprint-${i}-stories .story-checkbox`);
+                const sprintCompleted = document.querySelectorAll(`#sprint-${i}-stories .story-checkbox:checked`);
+                document.getElementById(`sprint-${i}-progress`).textContent = 
+                    `${sprintCompleted.length}/${sprintStories.length}`;
+            }
+
+            saveProgress();
+        }
+
+        function saveProgress() {
+            const progress = {
+                stories: [],
+                tasks: []
+            };
+
+            // Save story checkboxes
+            document.querySelectorAll('.story-checkbox').forEach((checkbox, index) => {
+                progress.stories.push(checkbox.checked);
+            });
+
+            // Save task checkboxes
+            document.querySelectorAll('.task-checkbox').forEach((checkbox, index) => {
+                progress.tasks.push(checkbox.checked);
+            });
+
+            localStorage.setItem('weatherApiProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('weatherApiProgress');
+            if (!saved) return;
+
+            const progress = JSON.parse(saved);
+
+            // Load story checkboxes
+            const storyCheckboxes = document.querySelectorAll('.story-checkbox');
+            progress.stories.forEach((checked, index) => {
+                if (storyCheckboxes[index]) {
+                    storyCheckboxes[index].checked = checked;
+                }
+            });
+
+            // Load task checkboxes
+            const taskCheckboxes = document.querySelectorAll('.task-checkbox');
+            progress.tasks.forEach((checked, index) => {
+                if (taskCheckboxes[index]) {
+                    taskCheckboxes[index].checked = checked;
+                    if (checked) {
+                        taskCheckboxes[index].parentElement.classList.add('completed');
+                    }
+                }
+            });
+        }
+
         function resetProgress() {
-            if (confirm('Reset all progress?')) {
-                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('weatherApiProgress');
+                
+                // Uncheck all checkboxes
+                document.querySelectorAll('.story-checkbox, .task-checkbox').forEach(cb => {
+                    cb.checked = false;
+                });
+
+                // Remove completed class from tasks
+                document.querySelectorAll('.task').forEach(task => {
+                    task.classList.remove('completed');
+                });
+
                 updateProgress();
             }
         }
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            const saved = localStorage.getItem('weatherApiProgress');
-            if (saved) {
-                const data = JSON.parse(saved);
-                document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
-                    cb.checked = data.checkboxes[i];
+
+        function exportProgress() {
+            const allStories = document.querySelectorAll('.story');
+            let report = '='.repeat(60) + '\n';
+            report += 'WEATHER API PROJECT - PROGRESS REPORT\n';
+            report += '='.repeat(60) + '\n\n';
+
+            const completed = document.querySelectorAll('.story-checkbox:checked').length;
+            const total = document.querySelectorAll('.story-checkbox').length;
+            const percentage = Math.round((completed / total) * 100);
+
+            report += `Overall Progress: ${completed}/${total} stories (${percentage}%)\n`;
+            report += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+            // Sprint summaries
+            for (let sprint = 1; sprint <= 3; sprint++) {
+                const sprintStories = document.querySelectorAll(`#sprint-${sprint}-stories .story`);
+                const sprintCompleted = document.querySelectorAll(`#sprint-${sprint}-stories .story-checkbox:checked`).length;
+                
+                const sprintNames = {
+                    1: 'Sprint 1: Core Functionality',
+                    2: 'Sprint 2: Production Features',
+                    3: 'Sprint 3: Deployment & Polish'
+                };
+
+                report += '-'.repeat(60) + '\n';
+                report += `${sprintNames[sprint]} - ${sprintCompleted}/${sprintStories.length} Complete\n`;
+                report += '-'.repeat(60) + '\n';
+
+                sprintStories.forEach(story => {
+                    const checkbox = story.querySelector('.story-checkbox');
+                    const title = story.querySelector('h3').textContent;
+                    const status = checkbox.checked ? '[✓]' : '[ ]';
+                    report += `${status} ${title}\n`;
                 });
+
+                report += '\n';
             }
-            updateProgress();
+
+            // Download as text file
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `weather-api-progress-${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showResources() {
+            document.getElementById('resourcesModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResources() {
+            document.getElementById('resourcesModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('resourcesModal');
+            if (event.target === modal) {
+                closeResources();
+            }
         });
     </script>
 </body>
