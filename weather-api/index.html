@@ -526,16 +526,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 Weather API Project Roadmap</h1>
-            <p>7-Day Sprint to Production-Ready API</p>
+            <h1>🚀 Go Weather API Project</h1>
+            <p>Complete Learning Roadmap with Resources & Project Analysis</p>
         </div>
 
         <div class="progress-overview">
-            <h2>Your Progress</h2>
+            <h2>Your Learning Progress</h2>
             <div class="stats">
                 <div class="stat-card">
                     <h3 id="total-stories">0</h3>
-                    <p>Total Stories</p>
+                    <p>Stories/Topics</p>
                 </div>
                 <div class="stat-card">
                     <h3 id="completed-stories">0</h3>
@@ -547,7 +547,7 @@
                 </div>
                 <div class="stat-card">
                     <h3 id="estimated-hours">0h</h3>
-                    <p>Hours Left</p>
+                    <p>Est. Learning Time</p>
                 </div>
             </div>
             <div class="progress-bar">
@@ -1418,6 +1418,341 @@
                             <p>Version control for your code.</p>
                         </li>
                     </ul>
+                </div>
+
+                <!-- Project Deep Dive -->
+                <div class="section">
+                    <h2>📁 Project Structure Deep Dive</h2>
+                    
+                    <h3>Folder Structure Explained</h3>
+                    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.85em;">
+go-weather-api/
+├── cmd/
+│   └── main.go                    # Application entry point - starts everything
+├── internal/                      # Private application code (not importable externally)
+│   ├── api/
+│   │   └── api.go                 # Server initialization & route setup
+│   ├── cache/
+│   │   └── cache.go               # Redis caching layer (interface + implementation)
+│   ├── config/
+│   │   └── config.go              # Configuration loading via Viper
+│   ├── dto/
+│   │   └── data_transfer_objects.go  # Data models (request/response structs)
+│   ├── handlers/
+│   │   └── wheather_handler.go    # HTTP request handlers (controller layer)
+│   ├── middleware/
+│   │   └── limiter.go             # Rate limiting middleware
+│   └── services/
+│       └── wheather_service.go    # Business logic (API calls + caching)
+├── docs/                          # Swagger documentation (auto-generated)
+├── docker-compose.yml             # Multi-container Docker setup
+├── dockerfile                     # Docker image build instructions
+└── go.mod / go.sum                # Go module dependencies
+                    </pre>
+
+                    <h3>Key Design Patterns Used</h3>
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Dependency Injection</h4>
+                            <ul>
+                                <li>Config passed to components</li>
+                                <li>Cache passed to services</li>
+                                <li>Services passed to handlers</li>
+                                <li>Easy testing via mocking</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Interface Segregation</h4>
+                            <ul>
+                                <li>Cache interface abstracts Redis</li>
+                                <li>WeatherService interface defined</li>
+                                <li>Loose coupling between layers</li>
+                                <li>Easy to swap implementations</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Service Layer Pattern</h4>
+                            <ul>
+                                <li>Business logic in services/</li>
+                                <li>HTTP handling in handlers/</li>
+                                <li>Clean separation of concerns</li>
+                                <li>Reusable service logic</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Cache-Aside Pattern</h4>
+                            <ul>
+                                <li>Check cache first</li>
+                                <li>Fetch from API on miss</li>
+                                <li>Store result in cache</li>
+                                <li>Set TTL (12 hours)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Request Flow -->
+                <div class="section">
+                    <h2>🔄 Request Flow Diagram</h2>
+                    
+                    <pre style="background: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 0.85em;">
+1. USER REQUEST: GET /weather/:city
+   ↓
+2. main.go → Loads config → Creates cache → Starts server
+   ↓
+3. Rate Limiter Middleware (1 request/sec per IP)
+   ├─ If exceeded → Return 429 Too Many Requests
+   └─ Otherwise → Continue
+   ↓
+4. WeatherHandler.GetWeatherByCity() receives request
+   ↓
+5. WeatherService.GetWeatherByCity() executes:
+   a) Check Redis cache for "weather:{city}"
+   b) If cache hit → Return cached data (skip to step 7)
+   c) If cache miss → Call Visual Crossing API
+   d) Parse response → Extract temp, windspeed, conditions
+   e) Cache result for 12 hours
+   f) Return formatted WeatherResponse
+   ↓
+6. JSON response sent back to client
+                    </pre>
+                </div>
+
+                <!-- Build from Scratch -->
+                <div class="section">
+                    <h2>🚀 Build from Scratch - Step by Step</h2>
+                    
+                    <div class="learning-path">
+                        <h3>Command-by-Command Guide:</h3>
+                        <ol>
+                            <li><strong>Initialize Go module:</strong><br><code>go mod init github.com/yourusername/weather-api</code></li>
+                            <li><strong>Install dependencies:</strong><br>
+                                <code>go get github.com/gin-gonic/gin</code><br>
+                                <code>go get github.com/go-redis/redis/v8</code><br>
+                                <code>go get github.com/spf13/viper</code><br>
+                                <code>go get github.com/didip/tollbooth</code><br>
+                                <code>go get github.com/swaggo/gin-swagger</code><br>
+                                <code>go get github.com/swaggo/swag</code>
+                            </li>
+                            <li><strong>Create project structure:</strong><br>
+                                <code>mkdir -p cmd internal/{api,cache,config,dto,handlers,middleware,services} docs</code>
+                            </li>
+                            <li><strong>Implement files in this order:</strong>
+                                <ol>
+                                    <li>config/config.go - Load config</li>
+                                    <li>dto/data_transfer_objects.go - Define structs</li>
+                                    <li>cache/cache.go - Redis interface + implementation</li>
+                                    <li>services/weather_service.go - Business logic</li>
+                                    <li>handlers/weather_handler.go - HTTP handlers</li>
+                                    <li>middleware/limiter.go - Rate limiting</li>
+                                    <li>api/api.go - Router setup</li>
+                                    <li>cmd/main.go - Entry point</li>
+                                </ol>
+                            </li>
+                            <li><strong>Generate Swagger docs:</strong><br><code>swag init</code></li>
+                            <li><strong>Create config.json and docker files</strong></li>
+                            <li><strong>Test locally:</strong><br><code>go run cmd/main.go</code></li>
+                            <li><strong>Build Docker image:</strong><br><code>docker-compose build</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Tiny Resources -->
+                <div class="section">
+                    <h2>⏱️ Tiny Resources - 15 Minute Reads</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 12px; text-align: left;">Topic</th>
+                                <th style="padding: 12px; text-align: left;">Resource</th>
+                                <th style="padding: 12px; text-align: left;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Go Interfaces</td>
+                                <td style="padding: 12px;"><a href="https://gobyexample.com/interfaces" target="_blank">Go by Example - Interfaces</a></td>
+                                <td style="padding: 12px;">10 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Go Concurrency</td>
+                                <td style="padding: 12px;"><a href="https://gobyexample.com/goroutines" target="_blank">Go by Example - Goroutines</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">JSON in Go</td>
+                                <td style="padding: 12px;"><a href="https://pkg.go.dev/encoding/json" target="_blank">encoding/json package</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">HTTP Client</td>
+                                <td style="padding: 12px;"><a href="https://pkg.go.dev/net/http" target="_blank">net/http package</a></td>
+                                <td style="padding: 12px;">20 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Redis Commands</td>
+                                <td style="padding: 12px;"><a href="https://redis.io/commands" target="_blank">Redis Commands</a></td>
+                                <td style="padding: 12px;">30 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Gin Middleware</td>
+                                <td style="padding: 12px;"><a href="https://gin-gonic.com/docs/examples/writing-middleware/" target="_blank">Gin Middleware</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;">Docker Multi-stage</td>
+                                <td style="padding: 12px;"><a href="https://docs.docker.com/build/building/multi-stage/" target="_blank">Docker Multi-stage Builds</a></td>
+                                <td style="padding: 12px;">20 min</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;">Rate Limiting</td>
+                                <td style="padding: 12px;"><a href="https://en.wikipedia.org/wiki/Rate_limiting" target="_blank">Rate Limiting Algorithms</a></td>
+                                <td style="padding: 12px;">15 min</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Learning Checklist -->
+                <div class="section">
+                    <h2>✅ Minimal Viable Learning Checklist</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Phase 1: Go Basics</h4>
+                            <ul>
+                                <li><input type="checkbox"> Write a simple Go HTTP server</li>
+                                <li><input type="checkbox"> Understand interfaces</li>
+                                <li><input type="checkbox"> Make HTTP GET request</li>
+                                <li><input type="checkbox"> Read environment variables</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 2: Data & Caching</h4>
+                            <ul>
+                                <li><input type="checkbox"> Connect to Redis</li>
+                                <li><input type="checkbox"> Implement cache Get/Set</li>
+                                <li><input type="checkbox"> Create JSON structs</li>
+                                <li><input type="checkbox"> Parse API responses</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 3: Production</h4>
+                            <ul>
+                                <li><input type="checkbox"> Create middleware function</li>
+                                <li><input type="checkbox"> Write unit tests</li>
+                                <li><input type="checkbox"> Build Docker image</li>
+                                <li><input type="checkbox"> Use Docker Compose</li>
+                            </ul>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 4: Documentation</h4>
+                            <ul>
+                                <li><input type="checkbox"> Generate Swagger docs</li>
+                                <li><input type="checkbox"> Write README</li>
+                                <li><input type="checkbox"> Add error handling</li>
+                                <li><input type="checkbox"> Configure rate limiting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase Breakdown -->
+                <div class="section">
+                    <h2>📅 Learning Phase Breakdown</h2>
+                    
+                    <div class="topic-grid">
+                        <div class="topic-card">
+                            <h4>Phase 1: Go Fundamentals (1-2 weeks)</h4>
+                            <ul>
+                                <li>Syntax & Basics (2-3 days)</li>
+                                <li>Interfaces (critical!) (1 day)</li>
+                                <li>Goroutines basics (1 day)</li>
+                                <li>HTTP Server basics (1 day)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://tour.golang.org/" target="_blank">A Tour of Go</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 2: Dependencies & Patterns (1 week)</h4>
+                            <ul>
+                                <li>Go modules (2 hours)</li>
+                                <li>Design patterns (2 days)</li>
+                                <li>Viper config (2 hours)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://go.dev/blog/using-go-modules" target="_blank">Go Modules</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 3: Core Concepts (1-2 weeks)</h4>
+                            <ul>
+                                <li>Redis caching (2 days)</li>
+                                <li>Gin framework (2 days)</li>
+                                <li>Middleware (1 day)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://redis.io/docs/" target="_blank">Redis Docs</a></p>
+                        </div>
+                        <div class="topic-card">
+                            <h4>Phase 4: Advanced (1 week)</h4>
+                            <ul>
+                                <li>Swagger docs (2 hours)</li>
+                                <li>Docker (2 days)</li>
+                                <li>Testing (2 days)</li>
+                            </ul>
+                            <p><strong>Start:</strong> <a href="https://docs.docker.com/get-started/" target="_blank">Docker Get Started</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology Stack -->
+                <div class="section">
+                    <h2>🛠️ Technology Stack Reference</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                        <thead>
+                            <tr style="background: #667eea; color: white;">
+                                <th style="padding: 12px; text-align: left;">Technology</th>
+                                <th style="padding: 12px; text-align: left;">Purpose</th>
+                                <th style="padding: 12px; text-align: left;">Learn More</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Go 1.22</strong></td>
+                                <td style="padding: 12px;">Programming language</td>
+                                <td style="padding: 12px;"><a href="https://go.dev/" target="_blank">go.dev</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Gin</strong></td>
+                                <td style="padding: 12px;">HTTP web framework</td>
+                                <td style="padding: 12px;"><a href="https://gin-gonic.com/" target="_blank">gin-gonic.com</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Redis</strong></td>
+                                <td style="padding: 12px;">In-memory caching</td>
+                                <td style="padding: 12px;"><a href="https://redis.io/" target="_blank">redis.io</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Viper</strong></td>
+                                <td style="padding: 12px;">Configuration management</td>
+                                <td style="padding: 12px;"><a href="https://github.com/spf13/viper" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Tollbooth</strong></td>
+                                <td style="padding: 12px;">Rate limiting</td>
+                                <td style="padding: 12px;"><a href="https://github.com/didip/tollbooth" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px;"><strong>Swaggo</strong></td>
+                                <td style="padding: 12px;">Swagger documentation</td>
+                                <td style="padding: 12px;"><a href="https://github.com/swaggo/swag" target="_blank">GitHub</a></td>
+                            </tr>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 12px;"><strong>Docker</strong></td>
+                                <td style="padding: 12px;">Containerization</td>
+                                <td style="padding: 12px;"><a href="https://docs.docker.com/" target="_blank">Docker Docs</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
